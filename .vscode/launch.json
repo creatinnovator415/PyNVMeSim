@@ -1,0 +1,145 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+	{
+		"name": "Run rnvme server",
+		"type": "cppdbg",
+		"request": "launch",
+		"program": "${workspaceFolder}/build/qemu-system-x86_64.exe",
+		"args": [
+			"-D",
+			"${workspaceFolder}/build/server_log.txt",
+			"-M",
+			"q35",
+			"-m",
+			"2G",
+			"-L",
+			"${workspaceFolder}/pc-bios",
+			"-drive",
+			"file=${workspaceFolder}/images/lubuntu.qcow2",
+			"-drive",
+			"file=${workspaceFolder}/images/nvme-c.qcow2,if=none,id=mynvme",
+			"-device",
+			"remote-port,chardev=pl-rp,sync=true,id=rp0",
+			"-device",
+			"rpsnvme,drive=mynvme,serial=deadbeef,rp-chan0=0,rp-adaptor0=rp0",
+			"-machine-path",
+			"${workspaceFolder}/build",
+			"-chardev",
+			"socket,id=pl-rp,path=${workspaceFolder}/build/pl-rp,server=on",
+			"-monitor",
+			"telnet:127.0.0.1:6666,server,nowait",
+			"-accel", "whpx,kernel-irqchip=off",
+			//"-net", "user,hostfwd=tcp::2222-:22",
+			//"-net", "nic,model=virtio",
+		],
+		"stopAtEntry": false,
+		"cwd": "${workspaceFolder}/build",
+		"environment": [
+			{
+				"name": "PATH",
+				"value": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+			}
+		],
+		"externalConsole": false,
+		"MIMode": "gdb",
+		"miDebuggerPath": "gdb"
+	},{
+		"name": "Run py rnvme client",
+		"type": "debugpy",
+		"request": "launch",
+		"program": "${workspaceFolder}/rnvme/rnvme_client.py",
+		"console": "integratedTerminal",
+		"args": [],
+		//"args": ["--verbose"],
+	},{
+		"name": "Run rnvme server port",
+		"type": "cppdbg",
+		"request": "launch",
+		"program": "${workspaceFolder}/build/qemu-system-x86_64.exe",
+		"args": [
+			"-D",
+			"${workspaceFolder}/build/server_log.txt",
+			"-M",
+			"q35",
+			"-m",
+			"2G",
+			"-L",
+			"${workspaceFolder}/pc-bios",
+			"-drive",
+			"file=${workspaceFolder}/images/lubuntu.qcow2",
+			"-drive",
+			"file=${workspaceFolder}/images/nvme-c.qcow2,if=none,id=mynvme",
+			"-device",
+			"remote-port,chardev=pl-rp,sync=true,id=rp0",
+			"-device",
+			"rpsnvme,drive=mynvme,serial=deadbeef,rp-chan0=0,rp-adaptor0=rp0",
+			"-machine-path",
+			"${workspaceFolder}/build",
+			"-chardev",
+			"socket,id=pl-rp,host=0.0.0.0,port=7777,server=on",
+			"-monitor",
+			"telnet:127.0.0.1:6666,server,nowait",
+			"-accel", "whpx,kernel-irqchip=off",
+		],
+		"stopAtEntry": false,
+		"cwd": "${workspaceFolder}/build",
+		"environment": [
+			{
+				"name": "PATH",
+				"value": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+			}
+		],
+		"externalConsole": false,
+		"MIMode": "gdb",
+		"miDebuggerPath": "gdb"
+	},
+	{
+		"name": "Run install image",
+		"type": "cppdbg",
+		"request": "launch",
+		"program": "${workspaceFolder}/build/qemu-system-x86_64.exe",
+		"args": [
+			"-vnc",
+			"localhost:1",
+			"-M",
+			"q35",
+			"-m",
+			"2G",
+			"-L",
+			"${workspaceFolder}/pc-bios",
+			"-drive",
+			"file=${workspaceFolder}/images/mini_server_ubuntu.qcow2,format=qcow2",
+			"-cdrom",
+			"${workspaceFolder}/images/ubuntu-25.10-live-server-amd64.iso",
+			"-boot",
+			"d",
+			"-accel", "whpx,kernel-irqchip=off"
+
+		],
+		"stopAtEntry": false,
+		"cwd": "${workspaceFolder}/build",
+		"environment": [
+			{
+				"name": "PATH",
+				"value": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+			}
+		],
+		"externalConsole": false,
+		"MIMode": "gdb",
+		"miDebuggerPath": "gdb"
+	},
+	{
+		"name": "Attach to qemu-system-x86_64",
+		"type": "cppdbg",
+		"request": "attach",
+		"program": "${workspaceFolder}/tests/whitney6_emu/src/src/scripts/emu/qemu/qemu-system-x86_64.exe",
+		"processId": "${command:pickProcess}",
+		"MIMode": "gdb",
+		"miDebuggerPath": "gdb"
+	},
+	]
+}

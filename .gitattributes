@@ -1,0 +1,2 @@
+build/qemu-system-x86_64w.exe filter=lfs diff=lfs merge=lfs -text
+build/qemu-system-x86_64.exe filter=lfs diff=lfs merge=lfs -text

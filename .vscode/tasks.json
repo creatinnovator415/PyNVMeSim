@@ -1,0 +1,53 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Configure QEMU",
+            "type": "shell",
+            "command": "sh",
+            "args": [
+                "-l",
+                "-c",
+                "rm -rf build && mkdir -p build && cd build && ../configure --static --target-list=x86_64-softmmu --enable-debug --disable-slirp --disable-guest-agent --disable-werror --disable-libnfs --disable-virglrenderer --disable-smartcard --disable-usb-redir --disable-gtk --disable-libssh --extra-cflags=\"-DCURL_STATICLIB -DSLIRP_STATIC -DLIBSLIRP_STATIC\" --extra-ldflags=\"-Wl,--allow-multiple-definition\""
+            ],
+            "problemMatcher": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "Build QEMU",
+            "type": "shell",
+            "command": "sh",
+            "args": [
+                "-l",
+                "-c",
+                "make -j8"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": "$gcc"
+        },
+        {
+            "label": "Run rnvme server",
+            "type": "shell",
+            "command": "${workspaceFolder}\\build\\qemu-system-x86_64.exe",
+            "args": [
+                "-vnc",
+                "localhost:1"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}\\build",
+                "env": {
+                    "PATH": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+                }
+            },
+            "problemMatcher": []
+        }
+    ]
+}
